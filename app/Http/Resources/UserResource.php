@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -12,6 +13,7 @@ class UserResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+    public static $wrap = false;
     public function toArray(Request $request): array
     {
         return[
@@ -19,7 +21,8 @@ class UserResource extends JsonResource
             "name" => $this->name,
             "email" => $this->email,
             "password" => $this->password,
-            "created_at" => $this->created_at,
+            "created_at" => (new Carbon($this->created_at))->format('y-m-d'),
+            "updated_at" => (new Carbon($this->updated_at))->format('y-m-d'),
         ];
     }
 }

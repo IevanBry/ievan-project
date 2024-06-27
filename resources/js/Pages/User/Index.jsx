@@ -1,17 +1,12 @@
 import Pagination from "@/Components/Pagination";
-import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import {
-    PROJECT_STATUS_CLASS_MAP,
-    PROJECT_STATUS_TEXT_MAP,
-} from "@/constants.jsx";
 import { Head, Link, router } from "@inertiajs/react";
 import TableHeading from "@/Components/TableHeading";
 
 export default function Index({ auth, users, queryParams = null, Success }) {
     queryParams = queryParams || {};
-    const serachFieldChanged = (name, value) => {
+    const searchFieldChanged = (name, value) => {
         if (value) {
             queryParams[name] = value;
         } else {
@@ -31,10 +26,10 @@ export default function Index({ auth, users, queryParams = null, Success }) {
             queryParams.sort_field = name;
             queryParams.sort_direction = "asc";
         }
-        router.get(route("task.index"), queryParams);
+        router.get(route("user.index"), queryParams);
     };
 
-    const deleteProject = (user) => {
+    const deleteUser = (user) => {
         if(!window.confirm("Are you sure want to delete this user?")){
             return;
         }
@@ -50,7 +45,7 @@ export default function Index({ auth, users, queryParams = null, Success }) {
                         className="font-semibold text-xl 
                 text-gray-800 dark:text-gray-200 leading-tight"
                     >
-                        users
+                        Users
                     </h2>
                     <Link
                         href={route("user.create")}
@@ -133,6 +128,16 @@ export default function Index({ auth, users, queryParams = null, Success }) {
                                         >
                                             Created Date
                                         </TableHeading>
+                                        <TableHeading
+                                            name="updated_at"
+                                            sort_field={queryParams.sort_field}
+                                            sort_direction={
+                                                queryParams.sort_direction
+                                            }
+                                            sortChanged={sortChanged}
+                                        >
+                                            Updated Date
+                                        </TableHeading>
                                         <th className="px-3 py-2 text-right">
                                             Action
                                         </th>
@@ -151,7 +156,7 @@ export default function Index({ auth, users, queryParams = null, Success }) {
                                                 defaultValue={queryParams.name}
                                                 placeholder="Search Name"
                                                 onBlur={(e) =>
-                                                    serachFieldChanged(
+                                                    searchFieldChanged(
                                                         "name",
                                                         e.target.value
                                                     )
@@ -161,6 +166,7 @@ export default function Index({ auth, users, queryParams = null, Success }) {
                                                 }
                                             />
                                         </th>
+                                        <th className="px-3 py-3"></th>
                                         <th className="px-3 py-3"></th>
                                         <th className="px-3 py-3"></th>
                                         <th className="px-3 py-3"></th>
@@ -192,18 +198,20 @@ export default function Index({ auth, users, queryParams = null, Success }) {
                                                 {user.created_at}
                                             </td>
                                             <td className="px-3 py-2 text-nowrap">
+                                                {user.updated_at}
+                                            </td>
+                                            <td className="px-3 py-2 text-nowrap">
                                                 <Link
                                                     href={route(
                                                         "user.edit",
-                                                        user.name
+                                                        user.id
                                                     )}
                                                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
                                                 >
                                                     Edit
                                                 </Link>
-
-                                                 <button
-                                                    onClick={(e) => deleteProject(user)}
+                                                <button
+                                                    onClick={(e) => deleteUser(user)}
                                                     className="font-medium text-blue-600 
                                                     dark:text-red-500 hover:underline mx-1">
                                                     Delete

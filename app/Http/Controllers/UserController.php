@@ -19,13 +19,9 @@ class UserController extends Controller
         $sortField = request("sort_field", "created_at");
         $sortDirection = request("sort_direction", "desc");
 
-        // if(request("name")){
-        //     $query->where("name","like","%" . request("name") . "%");
-        // }
-
-        // if(request("status")){
-        //     $query->where("status", request("status"));
-        // }
+        if(request("name")){
+            $query->where("name","like","%" . request("name") . "%");
+        }
 
         $users = $query->orderBy($sortField, $sortDirection)
         ->paginate(10);
@@ -42,7 +38,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return inertia("User/Create");
     }
 
     /**
@@ -50,7 +46,12 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        User::create($data);
+
+        return to_route('user.index')
+        ->with('Success', 'User was created');
     }
 
     /**
@@ -66,7 +67,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return inertia('User/Edit', [
+            'user' => new UserResource($user),
+        ]);
     }
 
     /**
@@ -74,7 +77,11 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        $name = $user->name;
+        $data = $request->validated();
+        $user->update($data);
+        return to_route('user.index')
+        ->with('Success', "User \"$name\" was updated");
     }
 
     /**
@@ -82,6 +89,9 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $name = $user->name;
+        $user->delete();
+        return to_route('user.index')
+            ->with('Success', "User \"$name\" was deleted");
     }
 }

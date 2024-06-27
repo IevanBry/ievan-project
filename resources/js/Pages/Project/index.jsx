@@ -31,7 +31,7 @@ export default function Index({ auth, projects, queryParams = null, Success }) {
             queryParams.sort_field = name;
             queryParams.sort_direction = "asc";
         }
-        router.get(route("task.index"), queryParams);
+        router.get(route("project.index"), queryParams);
     };
 
     const deleteProject = (project) => {
@@ -264,8 +264,7 @@ export default function Index({ auth, projects, queryParams = null, Success }) {
                                                 >
                                                     Edit
                                                 </Link>
-
-                                                 <button
+                                                <button
                                                     onClick={(e) => deleteProject(project)}
                                                     className="font-medium text-blue-600 
                                                     dark:text-red-500 hover:underline mx-1">
